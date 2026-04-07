@@ -6,7 +6,6 @@ const resultUrlInput = document.getElementById("result-url");
 const qrImage = document.getElementById("qr-image");
 const copyBtn = document.getElementById("copy-btn-modal");
 
-// 1. Hàm gọi API tới Backend
 async function handleShorten() {
   const longUrl = longUrlInput.value;
   if (!longUrl) return alert("Please enter a URL!");
@@ -26,18 +25,17 @@ async function handleShorten() {
     const data = await response.json();
 
     if (response.ok) {
-      // Đổ dữ liệu vào Modal
       resultUrlInput.value = data.shortUrl;
 
-      // Hiển thị QR Code (Chuỗi Base64 từ Backend)
+      // QR Code
       if (data.qrCode) {
         qrImage.src = data.qrCode;
         qrImage.style.display = "block";
-        qrImage.style.width = "150px"; // Đảm bảo ảnh có kích thước cụ thể
-        qrImage.style.margin = "0 auto"; // Căn giữa ảnh
+        qrImage.style.width = "150px";
+        qrImage.style.margin = "0 auto";
       }
 
-      // Mở Modal
+      // Show the modal
       modal.classList.add("show");
     } else {
       alert("Error: " + (data.errorCreateUrl || "Something went wrong"));
@@ -51,22 +49,22 @@ async function handleShorten() {
   }
 }
 
-// 2. Sự kiện Click nút Shorten
+// Shorten URL
 shortenBtn.addEventListener("click", handleShorten);
 
-// 3. Đóng Modal
+// Close modal
 closeBtn.addEventListener("click", () => {
   modal.classList.remove("show");
 });
 
-// 4. Copy Link
+// Copy link
 copyBtn.addEventListener("click", () => {
   resultUrlInput.select();
   document.execCommand("copy");
   alert("Copied to clipboard!");
 });
 
-// 5. Tải ảnh QR (Bonus UX)
+// Download QR Code
 document.querySelector(".download-qr").addEventListener("click", () => {
   const link = document.createElement("a");
   link.href = qrImage.src;
